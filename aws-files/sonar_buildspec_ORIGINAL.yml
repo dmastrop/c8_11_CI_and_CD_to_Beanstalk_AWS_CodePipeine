@@ -1,0 +1,77 @@
+# This is for project 11. We will transcribe this to the Insert Build Commands
+# editor in CodeBuild rather than read it directly from the yml as in project9
+version: 0.2
+env:
+  parameter-store:
+  # the values will be from the parameter store that we have set
+  # the first 4 are used for sonarcloud and the last one is used by CodeBuild to get access to CodeArtifact so
+  # that it can load dependencies required to make the build, etc....
+    #LOGIN: LOGIN
+    LOGIN: sonartoken-LOGIN-project11
+    #HOST: HOST
+    HOST: HOST-PROJECT11
+    #Organization: Organization
+    Organization: Organization-project11
+    #Project: Project
+    Project: Project-project11
+    #CODEARTIFACT_AUTH_TOKEN: CODEARTIFACT_AUTH_TOKEN
+    CODEARTIFACT_AUTH_TOKEN: CODEARTIFACT_AUTH_TOKEN-project11
+phases:
+  install:
+    runtime-versions:
+      #java: corretto8
+      # I am using CodeBuild 7.0 so use corretto17
+      java: corretto17
+    commands:
+    - cp ./settings.xml /root/.m2/settings.xml
+    # CodeBuild needs the settings in this particular folder to access CodeArtifact
+    
+    # NOTE We will not do export as noted below. We have added it directly to the AWS Parameter Store for project 11
+    # The below code was used for project 9 to grant CodeBuild access to CodeArtifact
+    # maven will use this settings.xml file in AWS CodeBuild.
+    #- export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain ArtifactDomain --domain-owner ID --region REGION --query authorizationToken --output text`
+    # this export string for CODEARTIFACT_AUTH_TOKEN will be modified for my setup
+    # This env variable is used in the settings.xml as part of the authentication login credentials to the CodeArtifact repo.
+    # CodeBuild will be executing this script and this will authorize CodeBuild access to teh CodeArtifact to get dependencies during the maven build process.
+    
+    #- export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain dmastrop --domain-owner 725291656587 --region us-east-1 --query authorizationToken --output text`
+  pre_build:
+    commands:
+    # download these tools to be used by CodeBuild during the build (and test and scan) phases. Note mvn install, build, checkstyle
+    # and then a sonar scan will be done.
+      - apt-get update
+      - apt-get install -y jq checkstyle
+      - wget https://dlcdn.apache.org/maven/maven-3/3.9.4/binaries/apache-maven-3.9.4-bin.tar.gz
+      # download full maven binaries
+      - tar xzvf apache-maven-3.9.4-bin.tar.gz
+      - ln -s apache-maven-3.9.4 maven
+      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
+      # download sonar scanner cli
+      - unzip ./sonar-scanner-cli-3.3.0.1492-linux.zip
+      - export PATH=$PATH:/sonar-scanner-3.3.0.1492-linux/bin/
+  build:
+    commands:
+    # the mvn commands test and checkstyle for example need dependencies. See pom.xml
+      - mvn test
+      - mvn checkstyle:checkstyle
+      # checksytle code analysis
+
+      # Need JDK17 now for sonarqube analysis maven plugin. Otherwise, get build ERROR.
+      # Sonarqube analysis no longer works with JDK11
+      # - echo "Installing JDK11 as its a dependency for sonarqube code analysis"
+      # - apt-get install -y openjdk-11-jdk
+      # - export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+      - echo "Installing JDK17 as its a dependency for sonarqube code analysis"
+      - apt-get install -y openjdk-17-jdk
+      - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+
+      # sonar.login is deprecated.  sonar.token is the proper syntax now.
+      #- mvn sonar:sonar -Dsonar.login=$LOGIN -Dsonar.host.url=$HOST -Dsonar.projectKey=$Project -Dsonar.organization=$Organization -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ -Dsonar.junit.reportsPath=target/surefire-reports/ -Dsonar.jacoco.reportsPath=target/jacoco.exec -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml
+      - mvn sonar:sonar -Dsonar.token=$LOGIN -Dsonar.host.url=$HOST -Dsonar.projectKey=$Project -Dsonar.organization=$Organization -Dsonar.java.binaries=target/test-classes/com/visualpathit/account/controllerTest/ -Dsonar.junit.reportsPath=target/surefire-reports/ -Dsonar.jacoco.reportsPath=target/jacoco.exec -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml
+      # mvn sonar scan from cli. Sonar analysis on the code and then upload the result to sonarcloud
+      - sleep 5
+      # store the result
+      - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project >result.json
+      - cat result.json
+      # Check qualtity gates
+      - if [ $(jq -r '.projectStatus.status' result.json) = ERROR ] ; then $CODEBUILD_BUILD_SUCCEEDING -eq 0 ;fi
