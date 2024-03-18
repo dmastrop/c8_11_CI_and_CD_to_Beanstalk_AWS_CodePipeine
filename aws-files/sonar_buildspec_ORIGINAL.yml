@@ -1,5 +1,5 @@
 # This is for project 11. We will transcribe this to the Insert Build Commands
-# editor in CodeBuild rather than read it directly from the yml as in project9
+# editor in CodeBuild rather than read it directly from the yml as in project9.
 version: 0.2
 env:
   parameter-store:
@@ -25,7 +25,7 @@ phases:
     commands:
     - cp ./settings.xml /root/.m2/settings.xml
     # CodeBuild needs the settings in this particular folder to access CodeArtifact
-    
+
     # NOTE We will not do export as noted below. We have added it directly to the AWS Parameter Store for project 11
     # The below code was used for project 9 to grant CodeBuild access to CodeArtifact
     # maven will use this settings.xml file in AWS CodeBuild.
