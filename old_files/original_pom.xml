@@ -215,7 +215,7 @@
       <repository>
         <id>codeartifact</id>
         <name>codeartifact</name>
-    <url>https://dmastrop-725291656587.d.codeartifact.us-east-1.amazonaws.com/maven/vprofile-codeartifact-maven-repo-project11/</url>
+    <url>https://dmastrop-725291656587.d.codeartifact.us-east-1.amazonaws.com/maven/maven-central-store/</url>
       </repository>
     </repositories>
 </project>
