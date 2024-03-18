@@ -1,13 +1,32 @@
+# This is for project 11. We will transcribe this to the Insert Build Commands
+# editor in CodeBuild rather than read it directly from the yml as in project9
+# This is for the second stage CodeBuild for building the .war artifact and storing it
+# on the vprofile-ecodeartifact-maven-repo-project11 repository on CodeArtifcat
+# will need CODEARTIFACT_AUTH_TOKEN so that CodeBuild has access to CodeArtifact
+
+
 version: 0.2
 env: 
   parameter-store:
-    CODEARTIFACT_AUTH_TOKEN: CODEARTIFACT_AUTH_TOKEN
+  # we only need this one for the building and storing of the .war artifact
+  # No sonarcloud parameters are needed in the buildspec.yml file
+    CODEARTIFACT_AUTH_TOKEN: CODEARTIFACT_AUTH_TOKEN-project11
 phases:
   install:
     runtime-versions:
-      java: corretto8
+      # The current options are use CodeBuild 5.0 and corretto11 or 
+      # use CodeBuild 7.0 and corretto17. I am using the CodeBuild7.0 which worked
+      # for the earlier CodeBuild project with sonarcloud analysis.
+      #java: corretto8
+      java: corretto17
     commands:
       - cp ./settings.xml /root/.m2/settings.xml
+
+      # NOTE no export CODEARTIFACT_AUTH_TOKEN is require here because we are using the paraneter store above
+      # and using the build editor and pasting this into the AWS build editor rather than 
+      # running from a buildspec.yml file as with project9.  This file is for project11
+      # - export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain dmastrop --domain-owner 725291656587 --region us-east-1 --query authorizationToken --output text`
+
   pre_build:
     commands:
       - apt-get update
@@ -17,8 +36,10 @@ phases:
       - ln -s apache-maven-3.9.4 maven
   build:
     commands:
+    # this will create the build and we can skip the tests. Those were done with the previous build along with sonarcloud scanning, etc.
       - mvn clean install -DskipTests
 artifacts:
   files:
+  # the *.war fle is created in the target folder after the maven build.
      - target/**/*.war
   discard-paths: yes
