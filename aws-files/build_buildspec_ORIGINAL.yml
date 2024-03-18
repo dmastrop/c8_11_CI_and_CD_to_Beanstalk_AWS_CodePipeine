@@ -21,6 +21,7 @@ phases:
       java: corretto17
     commands:
       - cp ./settings.xml /root/.m2/settings.xml
+      # this is the maven dependencies repo location on CodeArtifact so the mvn clean install can be run (see below)
 
       # NOTE no export CODEARTIFACT_AUTH_TOKEN is require here because we are using the paraneter store above
       # and using the build editor and pasting this into the AWS build editor rather than 
@@ -37,9 +38,13 @@ phases:
   build:
     commands:
     # this will create the build and we can skip the tests. Those were done with the previous build along with sonarcloud scanning, etc.
+    # we do not need to run unit tests.
       - mvn clean install -DskipTests
 artifacts:
   files:
   # the *.war fle is created in the target folder after the maven build.
+  # the file below will be labeled as artifact and will have the timestamp as given in pom.xml
+    # <timestamp>${maven.build.timestamp}</timestamp>
+    # <maven.build.timestamp.format>yyyy-MM-dd_HHmm</maven.build.timestamp.format>
      - target/**/*.war
   discard-paths: yes
