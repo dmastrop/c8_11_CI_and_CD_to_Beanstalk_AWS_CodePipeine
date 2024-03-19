@@ -35,7 +35,7 @@ phases:
       # Update: uncomment this out. This works better than the parameter store approach because the token is ephemeral
       # make sure to update the service-role attached to this build project with the 
       # AWSCodeArtifactReadOnlyAccess policy so that it can read the exported token and use it to access CodeArtifact
-       - export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain dmastrop --domain-owner 725291656587 --region us-east-1 --query authorizationToken --output text`
+      - export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain dmastrop --domain-owner 725291656587 --region us-east-1 --query authorizationToken --output text`
 
   pre_build:
     commands:
