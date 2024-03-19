@@ -21,6 +21,7 @@ env:
     # It is best to generate the token on the CodeBuild itself as a shell commmand as indicated
     # below so that it will use the currently valid TOKEN
     # (note i still have the token in parameter store but it will not be used when commenting out the next line below)
+    # https://www.udemy.com/course/devopsprojects/learn/lecture/23899712#questions/21518162
     #CODEARTIFACT_AUTH_TOKEN: CODEARTIFACT_AUTH_TOKEN-project11
 phases:
   install:

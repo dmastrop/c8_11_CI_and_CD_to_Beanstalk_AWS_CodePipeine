@@ -10,7 +10,12 @@ env:
   parameter-store:
   # we only need this one for the building and storing of the .war artifact
   # No sonarcloud parameters are needed in the buildspec.yml file
-    CODEARTIFACT_AUTH_TOKEN: CODEARTIFACT_AUTH_TOKEN-project11
+
+  # Commenting this out. This approach does not work well because the token is ephemeral
+  # and the parameter store has to be updated frequently. It is better to execute the 
+  # export CODEARTIFACT_AUTH_TOKEN command on CloudBuild itself real time for each build run.
+  # see below
+  #  CODEARTIFACT_AUTH_TOKEN: CODEARTIFACT_AUTH_TOKEN-project11
 phases:
   install:
     runtime-versions:
@@ -26,7 +31,11 @@ phases:
       # NOTE no export CODEARTIFACT_AUTH_TOKEN is require here because we are using the paraneter store above
       # and using the build editor and pasting this into the AWS build editor rather than 
       # running from a buildspec.yml file as with project9.  This file is for project11
-      # - export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain dmastrop --domain-owner 725291656587 --region us-east-1 --query authorizationToken --output text`
+
+      # Update: uncomment this out. This works better than the parameter store approach because the token is ephemeral
+      # make sure to update the service-role attached to this build project with the 
+      # AWSCodeArtifactReadOnlyAccess policy so that it can read the exported token and use it to access CodeArtifact
+       - export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain dmastrop --domain-owner 725291656587 --region us-east-1 --query authorizationToken --output text`
 
   pre_build:
     commands:
