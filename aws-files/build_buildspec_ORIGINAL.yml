@@ -6,8 +6,8 @@
 
 
 version: 0.2
-env: 
-  parameter-store:
+#env: 
+  #parameter-store:
   # we only need this one for the building and storing of the .war artifact
   # No sonarcloud parameters are needed in the buildspec.yml file
 
