@@ -15,7 +15,13 @@ env:
     #Project: Project
     Project: Project-project11
     #CODEARTIFACT_AUTH_TOKEN: CODEARTIFACT_AUTH_TOKEN
-    CODEARTIFACT_AUTH_TOKEN: CODEARTIFACT_AUTH_TOKEN-project11
+    # The CODEARTIFACT_AUTH_TOKEN is ephemeral and this approach requires manually 
+    # getting a new token from aws cli with IAM user and then updating the parameter store
+    # when the token expires.
+    # It is best to generate the token on the CodeBuild itself as a shell commmand as indicated
+    # below so that it will use the currently valid TOKEN
+    # (note i still have the token in parameter store but it will not be used when commenting out the next line below)
+    #CODEARTIFACT_AUTH_TOKEN: CODEARTIFACT_AUTH_TOKEN-project11
 phases:
   install:
     runtime-versions:
@@ -33,8 +39,11 @@ phases:
     # this export string for CODEARTIFACT_AUTH_TOKEN will be modified for my setup
     # This env variable is used in the settings.xml as part of the authentication login credentials to the CodeArtifact repo.
     # CodeBuild will be executing this script and this will authorize CodeBuild access to teh CodeArtifact to get dependencies during the maven build process.
+
+    # Uncomment out the below line, and comment out the parameter store usage(see comments in paramter-store block above)
+    # the approach below works for ephemeral nature of this token
     
-    #- export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain dmastrop --domain-owner 725291656587 --region us-east-1 --query authorizationToken --output text`
+    - export CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain dmastrop --domain-owner 725291656587 --region us-east-1 --query authorizationToken --output text`
   pre_build:
     commands:
     # download these tools to be used by CodeBuild during the build (and test and scan) phases. Note mvn install, build, checkstyle
