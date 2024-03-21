@@ -4,18 +4,18 @@
   xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
   <servers>
         <server>
-            <id>codeartifact</id>
+            <id>dmastrop-vprofile-codeartifact-maven-repo-project11</id>
             <username>aws</username>
             <password>${env.CODEARTIFACT_AUTH_TOKEN}</password>
         </server>
     </servers>
 <profiles>
   <profile>
-    <id>default</id>
+    <id>dmastrop-vprofile-codeartifact-maven-repo-project11</id>
     <repositories>
       <repository>
-        <id>codeartifact</id>
-    <url>https://domain-accountid.d.codeartifact.region.amazonaws.com/maven/maven-central-store/</url>
+        <id>dmastrop-vprofile-codeartifact-maven-repo-project11</id>
+    <url>https://dmastrop-725291656587.d.codeartifact.us-east-1.amazonaws.com/maven/vprofile-codeartifact-maven-repo-project11/</url>
       </repository>
     </repositories>
   </profile>
@@ -25,9 +25,9 @@
     </activeProfiles>
 <mirrors>
   <mirror>
-    <id>codeartifact</id>
-    <name>domainname--maven-central-store</name>
-    <url>https://domain-accountdid.d.codeartifact.region.amazonaws.com/maven/maven-central-store/</url>
+    <id>dmastrop-vprofile-codeartifact-maven-repo-project11</id>
+    <name>ddmastrop-vprofile-codeartifact-maven-repo-project11</name>
+    <url>https://dmastrop-725291656587.d.codeartifact.us-east-1.amazonaws.com/maven/vprofile-codeartifact-maven-repo-project11/</url>
     <mirrorOf>*</mirrorOf>
   </mirror>
 </mirrors>
