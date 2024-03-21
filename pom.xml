@@ -166,6 +166,7 @@
 		</dependency>
     </dependencies>
      <build>
+     <finalName>${project.artifactId}-${project.version}-${timestamp}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.eclipse.jetty</groupId>
@@ -207,7 +208,7 @@
       <repository>
         <id>codeartifact</id>
         <name>codeartifact</name>
-    <url>https://domainame-accountid.d.codeartifact.regioncode.amazonaws.com/maven/maven-central-store/</url>
+    <url>https://dmastrop-725291656587.d.codeartifact.us-east-1.amazonaws.com/maven/vprofile-codeartifact-maven-repo-project11/</url>
       </repository>
     </repositories>
 </project>
