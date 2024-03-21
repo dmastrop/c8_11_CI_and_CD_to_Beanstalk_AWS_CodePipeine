@@ -8,7 +8,7 @@ env:
 phases:
   install:
     runtime-versions:
-      java: correto17
+      java: corretto17
       # I am using CodeBuild 7.0
       #java: corretto8
     commands:
