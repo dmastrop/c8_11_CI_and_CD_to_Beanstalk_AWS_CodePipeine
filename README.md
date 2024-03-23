@@ -1,5 +1,5 @@
 # Prerequisites
-#
+# testing 2 EC2 instances on cd-aws branch that is working now with one instance
 - JDK 1.8 or later
 - Maven 3 or later
 - MySQL 5.6 or later
