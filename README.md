@@ -1,6 +1,7 @@
 # Prerequisites
 # testing 2 EC2 instances on cd-aws branch that is working now with one instance
 # testing 4/24/24 2 EC instances on cd-aws branch Full pipeline
+# testiing
 - JDK 1.8 or later
 - Maven 3 or later
 - MySQL 5.6 or later
