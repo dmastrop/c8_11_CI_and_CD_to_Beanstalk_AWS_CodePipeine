@@ -4,6 +4,7 @@
 # test SNS display name
 # test adding second email subscription to SNS
 # test push to giltab 
+# test 12/26 to CodeCommit
 
 # Prerequisites
 #
