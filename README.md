@@ -33,7 +33,11 @@ The standard CodeBuild pipelines are called vproifile-CI-pipeline-project11 and 
 NOTE: project9 IAM user is used for both project9 and 11 (added the ARN of project11 to the project9 IAM user). This simplifies the role provisioning between the two projects since they are overlapping anyways.
 
 
+# CD deployment extension with new pipeline to ElasticBeanstalk. 
 
+Use the artifact build .war file from the CI pipleine and deploy it to ElasticBeanstalk using a new CodePipeline.
+
+First get the basic push to CodeCommit CD pipeline working again then extend to a gitlab source CD pipeline.
 
 
 
