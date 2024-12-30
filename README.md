@@ -39,6 +39,9 @@ Use the artifact build .war file from the CI pipleine and deploy it to ElasticBe
 
 First get the basic push to CodeCommit CD pipeline working again then extend to a gitlab source CD pipeline.
 
+Note that the application.properties has to be modified in the vprofile tomcat frontend app so that it can connect to a backend RDS mysql (mariadb) server running on AWS. So the ElasticBeanstalk tomcat will host the vprofile frontennt app, the .war file has to be rebuild in a new pipeline stage that incorporates the RDS endpoint, login and password, and finally this beanstalk .war needs to be deployed to the running Beanstalk instance.  
+
+Also note that RDS security group has to permit the inbound connections from the tomcat Beanstalk instances. There are 2 loadbalanced tomcat instances configured in the Beanstalk environment.   Note that the healthcheck has to to be changed to /login, the default redirected page of the frontend app.  Also note that cookie based stickiness needs to be configured on the tomcat instances so that the same connection flows thorugh the same tomcat EC2 instance which connects to the backend RDS db. The backend RDS connection requires that persistent connections be made for each separate browser instance login to the frontend app.
 
 
 # Prerequisites
