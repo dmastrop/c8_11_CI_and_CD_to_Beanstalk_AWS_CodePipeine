@@ -43,6 +43,10 @@ Note that the application.properties has to be modified in the vprofile tomcat f
 
 Also note that RDS security group has to permit the inbound connections from the tomcat Beanstalk instances. There are 2 loadbalanced tomcat instances configured in the Beanstalk environment.   Note that the healthcheck has to to be changed to /login, the default redirected page of the frontend app.  Also note that cookie based stickiness needs to be configured on the tomcat instances so that the same connection flows thorugh the same tomcat EC2 instance which connects to the backend RDS db. The backend RDS connection requires that persistent connections be made for each separate browser instance login to the frontend app.
 
+# Convert the CodeBuild1 and CodeBuild2 to run off of cd-aws
+
+CodeBuild1 and CodeBuild2 can now run off of the pipeline source code branch cd-aws. This is just a technicality configuration issue. In the CodeBuild1 and 2 configuration the branch can be changed to cd-aws. The pipeline has been tested and runs fine.
+
 
 # Prerequisites
 #
